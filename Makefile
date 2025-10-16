@@ -1,5 +1,20 @@
-# Run app locally
-run:
+# ===============================
+# Application Commands
+# ===============================
+
+# Check and migrate database if needed
+# This command automatically checks if the database and tables exist
+# If not, it will run migrations before starting the application
+check-db:
+	@echo "🔍 Checking database and tables..."
+	@mysql -h localhost -u yudo -pyudo123 -e "USE hackathon_getcontact; SHOW TABLES;" > /dev/null 2>&1 || \
+	(echo "⚠️  Database atau tabel belum ada, menjalankan migrasi..." && $(MAKE) migrate-up)
+	@echo "✅ Database check complete"
+
+# Run app locally (with automatic database check and migration)
+# This will automatically check database and run migrations if needed
+run: check-db
+	@echo "🚀 Starting application..."
 	go run ./cmd/server/main.go
 
 # Build the application

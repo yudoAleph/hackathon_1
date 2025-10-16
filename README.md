@@ -96,9 +96,17 @@ ENVIRONMENT=development
 2. Run the application:
 
    ```bash
-   go run ./cmd/server
-   # or
    make run
+   ```
+
+   **Note:** The `make run` command now automatically:
+   - Checks if the database and tables exist
+   - Runs migrations if needed
+   - Starts the application
+
+   You can also run manually:
+   ```bash
+   go run ./cmd/server/main.go
    ```
 
 3. The API will be available at `http://localhost:9001`
@@ -193,6 +201,8 @@ Run the included test script to verify all endpoints:
 
 ```bash
 ./test_api.sh
+# or test against a remote server
+./test_api.sh http://your-server-ip
 ```
 
 This script will:
@@ -201,8 +211,46 @@ This script will:
 - Register a test user
 - Login and get JWT token
 - Test all protected endpoints (profile, contacts CRUD)
+- Validate response codes and data
 
 **Note:** Make sure the server is running and migrations are applied before running the test script.
+
+## VPS Deployment
+
+### Quick Setup
+
+Deploy to production VPS with nginx reverse proxy:
+
+```bash
+# 1. Setup nginx reverse proxy (HTTP + HTTPS)
+sudo ./setup_nginx.sh yourdomain.com
+
+# 2. Run application
+make run
+```
+
+Your API will be accessible at:
+- **HTTP:** http://yourdomain.com
+- **HTTPS:** https://yourdomain.com (after SSL setup)
+
+### Troubleshooting
+
+If you encounter issues on VPS:
+
+```bash
+sudo ./troubleshoot_vps.sh
+```
+
+This diagnostic script checks:
+- System resources and connectivity
+- Port status (9001, 3306, 80, 443)
+- Firewall configuration
+- Application and database status
+- Nginx configuration
+- SSL certificates
+- Recent errors in logs
+
+See [VPS Deployment Guide](docs/VPS_DEPLOYMENT.md) for detailed instructions.
 
 ## Project Structure
 
